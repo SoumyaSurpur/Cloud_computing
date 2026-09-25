@@ -130,7 +130,7 @@ Execution of Sysbench CPU benchmark inside the Proxmox VE guest environment:
 
 Execution of Sysbench CPU benchmark on VMware Workstation within `soumya@soumya-virtual-machine`:
 
-![VMware Workstation Type-2 Benchmark Terminal](images/2.png)
+<img width="925" height="599" alt="Screenshot 2026-09-25 182140" src="https://github.com/user-attachments/assets/3ee8d75f-5aca-4815-a8ce-9737a0a0c32a" />
 
 *Figure 2: VMware Workstation (Type-2 Hypervisor) Sysbench execution output on `soumya@soumya-virtual-machine`.*
 
