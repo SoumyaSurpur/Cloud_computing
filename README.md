@@ -270,14 +270,8 @@ Cloud_Computing/
 │   ├── 2.png                                  # VMware Workstation (Type-2) Benchmark Screenshot
 │   ├── events_per_second_comparison.png       # CPU Throughput Comparison Bar Chart
 │   ├── latency_comparison.png                 # Latency Breakdown Bar Chart (Min, Avg, P95, Max)
-│   ├── total_events_comparison.png            # Total Events Completed in 10s Chart
 │   ├── overall_performance_dashboard.png      # Multi-panel Analytical Evaluation Dashboard
-│   ├── proxmox_dashboard.jpg                  # Proxmox VE Cluster Resource Dashboard
-│   ├── proxmox_vm_summary.jpg                 # Proxmox VE Hardware Allocation Summary
-│   ├── proxmox_memory_graph.jpg               # Proxmox VE Memory Utilization Over Time
-│   ├── proxmox_disk_io.jpg                    # Proxmox VE Storage I/O Graph
-│   ├── vmware_top.jpg                         # VMware Guest Resource Consumption (top)
-│   └── vmware_sysbench_install.jpg            # VMware Sysbench Package Setup
+│   └── total_events_comparison.png            # Total Events Completed in 10s Chart
 │
 └── scripts/                                   # Automation & Analytical Scripts
     ├── benchmark.sh                           # Sysbench VM Execution & Hardware Logging Script
