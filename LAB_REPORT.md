@@ -10,7 +10,6 @@
 - **Student Name:** Soumya
 - **Environment:** Ubuntu Linux 22.04 LTS on Proxmox VE & VMware Workstation Pro
 - **Date of Experiment:** September 2026
-- **Status:** Evaluated and Documented
 
 ---
 
