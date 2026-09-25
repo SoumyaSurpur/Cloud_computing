@@ -7,7 +7,7 @@
 ### Student & Course Metadata
 - **Course Name:** Cloud Computing Laboratory
 - **Experiment No:** 01
-- **Student Name:** Soumya Surpur
+- **Student Name:** Soumya
 - **Environment:** Ubuntu Linux 22.04 LTS on Proxmox VE & VMware Workstation Pro
 - **Date of Experiment:** September 2026
 - **Status:** Evaluated and Documented
@@ -222,12 +222,3 @@ Proxmox VE delegates CPU instruction execution directly to hardware via Intel VT
    - **Type-2 Hypervisors (VMware Workstation / VirtualBox)**: Recommended for Local Software Development, Sandboxed Testing, and Educational Classroom Labs where ease of installation on a desktop OS is prioritized over absolute throughput.
 
 ---
-
-## 11. References
-1. Sysbench Manual & Documentation: *https://github.com/akopytov/sysbench*
-2. Proxmox VE Technical Documentation: *https://pve.proxmox.com/pve-docs/*
-3. VMware Workstation Pro Architecture Whitepaper: *https://www.vmware.com/products/workstation-pro.html*
-4. Linux Kernel KVM Virtualization Documentation: *https://www.kernel.org/doc/html/latest/virt/kvm/*
-
----
-*Report submitted by **Soumya Surpur** in partial fulfillment of the requirements for the Cloud Computing Laboratory course.*
