@@ -1,28 +1,9 @@
 # Cloud Computing Laboratory
 
-[![Student](https://img.shields.io/badge/Author-Soumya%20Surpur-blue.svg)](#)
-[![Course](https://img.shields.io/badge/Course-Cloud%20Computing%20Laboratory-indigo.svg)](#)
-[![Status](https://img.shields.io/badge/Repository-Active%20Lab%20Portfolio-success.svg)](#)
-[![Language](https://img.shields.io/badge/Scripts-Bash%20%7C%20Python-yellow.svg)](#)
-[![License](https://img.shields.io/badge/License-MIT-lightgrey.svg)](#)
-
-Welcome to the **Cloud Computing Laboratory** repository. This repository serves as a centralized academic and practical portfolio documenting cloud computing experiments, system virtualization benchmarks, container orchestration workflows, and distributed infrastructure evaluations.
-
----
-
-## Laboratory Experiment Index
-
-This repository is structured modularly to host all hands-on cloud computing laboratory experiments across the semester:
-
-| Exp No. | Experiment Title | Core Technologies / Hypervisors | Documentation Link | Status |
-| :---: | :--- | :--- | :---: | :---: |
-| **01** | **Performance Analysis of Type-1 and Type-2 Hypervisors** | Proxmox VE (KVM), VMware Workstation, Sysbench | [Experiment 1 Details](#experiment-1-performance-analysis-of-type-1-and-type-2-hypervisors) \| [Lab Report](LAB_REPORT.md) | `Completed` |
-| **02** | Containerization & Microservices Deployment | Docker, Docker Compose, Linux Cgroups/Namespaces | *Coming Soon* | `Planned` |
-| **03** | Container Orchestration & Scaling | Kubernetes (K3s / Minikube), Pods, Ingress | *Coming Soon* | `Planned` |
-| **04** | Cloud Storage & Object Storage Benchmarking | MinIO / AWS S3, Ceph, FIO Benchmark | *Coming Soon* | `Planned` |
-| **05** | Infrastructure as Code (IaC) & Cloud Provisioning | Terraform, OpenStack / AWS EC2 | *Coming Soon* | `Planned` |
-
----
+![Course](https://img.shields.io/badge/Course-Cloud%20Computing-blue)
+![Hypervisors](https://img.shields.io/badge/Hypervisors-Proxmox%20VE%20%7C%20VMware%20Workstation-orange)
+![Benchmark](https://img.shields.io/badge/Benchmark-Sysbench%20CPU%2020k%20Primes-brightgreen)
+![Status](https://img.shields.io/badge/Status-Completed-brightgreen)
 
 # Experiment 1: Performance Analysis of Type-1 and Type-2 Hypervisors
 
@@ -275,15 +256,18 @@ python scripts/generate_plots.py
 
 ## 10. Repository Structure
 
-```
+```text
 Cloud_Computing/
 │
 ├── README.md                                  # Central Laboratory Documentation & Experiment 1 Overview
 ├── LAB_REPORT.md                              # Formal Academic Laboratory Report Submission
+├── Lab-Manual-Hypervisor-Performance-Analysis... # Complete Hypervisor Performance Analysis Lab Manual
+├── type1.pdf                                  # Type-1 Hypervisor – Proxmox VE Documentation
+├── type2.pdf                                  # Type-2 Hypervisor – VMware Workstation Documentation
 │
 ├── images/                                    # Experimental Evidence & Generated Visualizations
 │   ├── 1.png                                  # Proxmox VE (Type-1) Benchmark Terminal Screenshot
-│   ├── 2.png                                  # VMware Workstation (Type-2) Soumya Benchmark Screenshot
+│   ├── 2.png                                  # VMware Workstation (Type-2) Benchmark Screenshot
 │   ├── events_per_second_comparison.png       # CPU Throughput Comparison Bar Chart
 │   ├── latency_comparison.png                 # Latency Breakdown Bar Chart (Min, Avg, P95, Max)
 │   ├── total_events_comparison.png            # Total Events Completed in 10s Chart
@@ -299,8 +283,7 @@ Cloud_Computing/
     ├── benchmark.sh                           # Sysbench VM Execution & Hardware Logging Script
     ├── generate_plots.py                      # Matplotlib Visualization Generator
     └── parse_sysbench.py                      # Quantitative Delta & Speedup Calculator
-```
 
+```
 ---
 
-*Academic Portfolio maintained by **Soumya Surpur** for Cloud Computing Coursework.*
