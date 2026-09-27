@@ -6,10 +6,17 @@
 
 ### Student & Course Metadata
 - **Course Name:** Cloud Computing Laboratory
-- **Experiment No:** 01
-- **Student Name:** Soumya
+- **Course Name:** Cloud Computing Laboratory
+- **Experiment No:** 01 (Hypervisors) & 02 (VMs vs Containers)
+- **Student Name:** Soumya Surpur
+- **USN:** 01FE24BCI121
+- **Roll No:** 245
 - **Environment:** Ubuntu Linux 22.04 LTS on Proxmox VE & VMware Workstation Pro
 - **Date of Experiment:** September 2026
+- **Status:** Evaluated and Documented
+- **Lab Portfolio:**
+  - [Experiment 01 Report (This File)](#experiment-01-performance-analysis-of-type-1-and-type-2-hypervisors)
+  - [Experiment 02 Report (VM vs Containers)](vm-vs-container-performance/LAB_REPORT.md)
 
 ---
 
