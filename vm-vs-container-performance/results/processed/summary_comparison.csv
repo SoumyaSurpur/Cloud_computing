@@ -12,3 +12,6 @@ Storage Rand Write,IOPS,1331.0,1346.0,+1.13% (Container faster)
 Network Throughput (Sender),Gbits/sec,14.1,13.7,+2.92% (VM faster)
 Network Throughput (Receiver),Gbits/sec,14.1,10.3,+36.89% (VM faster)
 Network Retransmissions,Packets,3.0,13.0,Container had 4.33x more retransmits
+FastAPI /health,Req/sec,419.79,371.07,+13.13% (VM faster)
+FastAPI /compute,Req/sec,12.24,10.76,+13.75% (VM faster)
+FastAPI /memory,Req/sec,16.43,14.4,+14.10% (VM faster)

@@ -62,7 +62,18 @@ df_net = pd.DataFrame(net_data)
 df_net.to_csv(os.path.join(PROC_DIR, 'network_results.csv'), index=False)
 
 # -------------------------------------------------------------
-# 5. Combined Summary CSV Export
+# 5. FastAPI Microservice Data & CSV Export
+# -------------------------------------------------------------
+api_data = [
+    {'endpoint': '/health', 'requests': 10000, 'concurrency': 100, 'vm_rps': 419.79, 'c_rps': 371.07, 'vm_lat_ms': 238.21, 'c_lat_ms': 269.49, 'vm_transfer_kb': 67.24, 'c_transfer_kb': 59.43},
+    {'endpoint': '/compute', 'requests': 1000, 'concurrency': 10, 'vm_rps': 12.24, 'c_rps': 10.76, 'vm_lat_ms': 817.31, 'c_lat_ms': 929.47, 'vm_transfer_kb': 2.07, 'c_transfer_kb': 1.82},
+    {'endpoint': '/memory', 'requests': 1000, 'concurrency': 10, 'vm_rps': 16.43, 'c_rps': 14.40, 'vm_lat_ms': 608.50, 'c_lat_ms': 694.62, 'vm_transfer_kb': 2.63, 'c_transfer_kb': 2.31}
+]
+df_api = pd.DataFrame(api_data)
+df_api.to_csv(os.path.join(PROC_DIR, 'api_results.csv'), index=False)
+
+# -------------------------------------------------------------
+# 6. Combined Summary CSV Export
 # -------------------------------------------------------------
 summary_data = [
     {'Category': 'CPU (1-thread)', 'Metric': 'Events/sec', 'VM_Value': 515.84, 'Container_Value': 517.19, 'Relative_Difference': '+0.26% (Container faster)'},
@@ -77,13 +88,16 @@ summary_data = [
     {'Category': 'Storage Rand Write', 'Metric': 'IOPS', 'VM_Value': 1331.0, 'Container_Value': 1346.0, 'Relative_Difference': '+1.13% (Container faster)'},
     {'Category': 'Network Throughput (Sender)', 'Metric': 'Gbits/sec', 'VM_Value': 14.1, 'Container_Value': 13.7, 'Relative_Difference': '+2.92% (VM faster)'},
     {'Category': 'Network Throughput (Receiver)', 'Metric': 'Gbits/sec', 'VM_Value': 14.1, 'Container_Value': 10.3, 'Relative_Difference': '+36.89% (VM faster)'},
-    {'Category': 'Network Retransmissions', 'Metric': 'Packets', 'VM_Value': 3.0, 'Container_Value': 13.0, 'Relative_Difference': 'Container had 4.33x more retransmits'}
+    {'Category': 'Network Retransmissions', 'Metric': 'Packets', 'VM_Value': 3.0, 'Container_Value': 13.0, 'Relative_Difference': 'Container had 4.33x more retransmits'},
+    {'Category': 'FastAPI /health', 'Metric': 'Req/sec', 'VM_Value': 419.79, 'Container_Value': 371.07, 'Relative_Difference': '+13.13% (VM faster)'},
+    {'Category': 'FastAPI /compute', 'Metric': 'Req/sec', 'VM_Value': 12.24, 'Container_Value': 10.76, 'Relative_Difference': '+13.75% (VM faster)'},
+    {'Category': 'FastAPI /memory', 'Metric': 'Req/sec', 'VM_Value': 16.43, 'Container_Value': 14.40, 'Relative_Difference': '+14.10% (VM faster)'}
 ]
 df_summary = pd.DataFrame(summary_data)
 df_summary.to_csv(os.path.join(PROC_DIR, 'summary_comparison.csv'), index=False)
 
 # -------------------------------------------------------------
-# PLOT 1: CPU Scalability (Throughput & Latency)
+# PLOT 1: CPU Scalability
 # -------------------------------------------------------------
 fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 5))
 x = np.arange(len(df_cpu['threads']))
@@ -116,7 +130,7 @@ plt.savefig(os.path.join(FIG_DIR, 'cpu_scalability.png'), dpi=300)
 plt.close()
 
 # -------------------------------------------------------------
-# PLOT 2: Memory Performance (Bandwidth & Latency)
+# PLOT 2: Memory Performance
 # -------------------------------------------------------------
 fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(13, 5))
 x = np.arange(len(df_mem['threads']))
@@ -151,7 +165,7 @@ plt.savefig(os.path.join(FIG_DIR, 'memory_performance.png'), dpi=300)
 plt.close()
 
 # -------------------------------------------------------------
-# PLOT 3: Disk I/O Performance (Bandwidth & IOPS)
+# PLOT 3: Disk I/O Performance
 # -------------------------------------------------------------
 fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 5.5))
 seq_labels = ['Seq Read (1M)', 'Seq Write (1M)']
@@ -192,7 +206,7 @@ plt.savefig(os.path.join(FIG_DIR, 'disk_io_performance.png'), dpi=300)
 plt.close()
 
 # -------------------------------------------------------------
-# PLOT 4: Network Performance (Bitrate & Retransmissions)
+# PLOT 4: Network Performance
 # -------------------------------------------------------------
 fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(13, 5))
 net_labels = ['Sender Throughput', 'Receiver Throughput']
@@ -228,10 +242,49 @@ plt.savefig(os.path.join(FIG_DIR, 'network_performance.png'), dpi=300)
 plt.close()
 
 # -------------------------------------------------------------
-# PLOT 5: Multi-panel Overall Dashboard
+# PLOT 5: FastAPI Microservice Performance
 # -------------------------------------------------------------
-fig, axs = plt.subplots(2, 2, figsize=(16, 11))
-fig.suptitle('Performance Analysis: Virtual Machine vs Docker Container (Experiment 2)', fontsize=16, fontweight='bold', y=0.98)
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 5.2))
+endpoints = ['/health (c=100)', '/compute (c=10)', '/memory (c=10)']
+vm_rps = [419.79, 12.24, 16.43]
+c_rps = [371.07, 10.76, 14.40]
+xa = np.arange(len(endpoints))
+wa = 0.35
+
+bars1 = ax1.bar(xa - wa/2, vm_rps, wa, label='Virtual Machine', color='#2563EB', alpha=0.9)
+bars2 = ax1.bar(xa + wa/2, c_rps, wa, label='Docker Container', color='#10B981', alpha=0.9)
+ax1.set_ylabel('Throughput (Requests / sec)', fontweight='bold', fontsize=11)
+ax1.set_title('FastAPI Microservice Throughput (ab benchmark)', fontweight='bold', fontsize=12)
+ax1.set_xticks(xa)
+ax1.set_xticklabels(endpoints, fontweight='bold')
+ax1.legend(frameon=True)
+for i in range(len(xa)):
+    ax1.text(xa[i] - wa/2, vm_rps[i] + (10 if i == 0 else 0.4), f"{vm_rps[i]:.1f}", ha='center', fontsize=9)
+    ax1.text(xa[i] + wa/2, c_rps[i] + (10 if i == 0 else 0.4), f"{c_rps[i]:.1f}", ha='center', fontsize=9)
+
+vm_lat = [238.21, 817.31, 608.50]
+c_lat = [269.49, 929.47, 694.62]
+
+ax2.bar(xa - wa/2, vm_lat, wa, label='VM Mean Latency', color='#3B82F6', alpha=0.9)
+ax2.bar(xa + wa/2, c_lat, wa, label='Container Mean Latency', color='#34D399', alpha=0.9)
+ax2.set_ylabel('Mean Latency (ms)', fontweight='bold', fontsize=11)
+ax2.set_title('FastAPI Request Latency Comparison', fontweight='bold', fontsize=12)
+ax2.set_xticks(xa)
+ax2.set_xticklabels(endpoints, fontweight='bold')
+ax2.legend(frameon=True)
+for i in range(len(xa)):
+    ax2.text(xa[i] - wa/2, vm_lat[i] + 15, f"{vm_lat[i]:.0f} ms", ha='center', fontsize=9)
+    ax2.text(xa[i] + wa/2, c_lat[i] + 15, f"{c_lat[i]:.0f} ms", ha='center', fontsize=9)
+
+plt.tight_layout()
+plt.savefig(os.path.join(FIG_DIR, 'fastapi_performance.png'), dpi=300)
+plt.close()
+
+# -------------------------------------------------------------
+# PLOT 6: Comprehensive 6-Quadrant Dashboard
+# -------------------------------------------------------------
+fig, axs = plt.subplots(3, 2, figsize=(16, 15))
+fig.suptitle('Complete Performance Evaluation: Virtual Machine vs Docker Container (Experiment 2)', fontsize=16, fontweight='bold', y=0.99)
 
 # Panel 1: CPU Scalability
 axs[0, 0].plot(df_cpu['threads'], df_cpu['vm_eps'], marker='o', linewidth=2.5, markersize=8, label='Virtual Machine', color='#2563EB')
@@ -277,8 +330,28 @@ axs[1, 1].set_xticks(xn)
 axs[1, 1].set_xticklabels(['Sender', 'Receiver'])
 axs[1, 1].legend()
 
-plt.tight_layout(rect=[0, 0, 1, 0.96])
+# Panel 5: FastAPI Throughput
+axs[2, 0].bar(xa - 0.17, vm_rps, 0.34, label='Virtual Machine', color='#2563EB')
+axs[2, 0].bar(xa + 0.17, c_rps, 0.34, label='Docker Container', color='#10B981')
+axs[2, 0].set_title('E: FastAPI Microservice Throughput (Req/sec)', fontweight='bold')
+axs[2, 0].set_xlabel('Endpoint')
+axs[2, 0].set_ylabel('Requests / Second')
+axs[2, 0].set_xticks(xa)
+axs[2, 0].set_xticklabels(['/health', '/compute', '/memory'])
+axs[2, 0].legend()
+
+# Panel 6: FastAPI Latency
+axs[2, 1].bar(xa - 0.17, vm_lat, 0.34, label='VM Mean Latency', color='#3B82F6')
+axs[2, 1].bar(xa + 0.17, c_lat, 0.34, label='Container Mean Latency', color='#34D399')
+axs[2, 1].set_title('F: FastAPI Microservice Latency (ms)', fontweight='bold')
+axs[2, 1].set_xlabel('Endpoint')
+axs[2, 1].set_ylabel('Latency (ms)')
+axs[2, 1].set_xticks(xa)
+axs[2, 1].set_xticklabels(['/health', '/compute', '/memory'])
+axs[2, 1].legend()
+
+plt.tight_layout(rect=[0, 0, 1, 0.97])
 plt.savefig(os.path.join(FIG_DIR, 'overall_performance_dashboard.png'), dpi=300)
 plt.close()
 
-print('All 5 CSVs and 5 publication-quality figures successfully created.')
+print('All 6 CSVs and 6 publication-quality figures successfully created.')

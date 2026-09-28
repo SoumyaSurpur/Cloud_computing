@@ -298,17 +298,18 @@ Cloud_Computing/
 
 [![Environment](https://img.shields.io/badge/OS-Ubuntu%2022.04%20LTS-purple.svg)](#)
 [![Docker](https://img.shields.io/badge/Container%20Engine-Docker%20CE-blue.svg)](#)
-[![Status](https://img.shields.io/badge/Benchmark-Infrastructure%20Complete-brightgreen.svg)](#)
+[![Status](https://img.shields.io/badge/Benchmark-Complete%20(Infra%20%2B%20FastAPI)-brightgreen.svg)](#)
 
 ## Executive Summary
 
-Experiment 2 evaluates the architectural and performance characteristics of **Hardware-Level Virtual Machines (VMware / KVM)** versus **OS-Level Containers (Docker)** across compute, memory, storage I/O, and networking subsystems.
+Experiment 2 evaluates the architectural and performance characteristics of **Hardware-Level Virtual Machines (VMware / KVM)** versus **OS-Level Containers (Docker)** across compute, memory, storage I/O, networking, and application microservice tiers.
 
 Benchmarking was conducted on standardized Ubuntu 22.04 LTS environments using industry-standard profiling suites:
 - **CPU Computation:** `sysbench cpu` across 1, 2, 4, and 8 thread scales.
 - **Memory Subsystem:** `sysbench memory` sequential write bandwidth and latency (512 MB working set, 1 MB block size).
 - **Storage Subsystem:** Flexible I/O Tester (`fio`) measuring sequential and 4K random read/write throughput and IOPS.
 - **Network Subsystem:** `iperf3` measuring TCP throughput, transfer volumes, and socket retransmissions over loopback and virtual bridge (`docker0`) interfaces.
+- **Application Microservice:** Python FastAPI (`uvicorn`) evaluated with ApacheBench (`ab`) across `/health`, `/compute`, and `/memory` endpoints under concurrent load.
 
 ### Key Empirical Findings
 
@@ -316,7 +317,11 @@ Benchmarking was conducted on standardized Ubuntu 22.04 LTS environments using i
 2. **Storage I/O Advantage:** Docker achieved a **+34.58% higher 4K Random Read IOPS** (1,767 IOPS vs. 1,313 IOPS) and lower I/O latency (0.56 ms vs. 0.75 ms) due to direct Virtual File System (VFS) passthrough compared to hypervisor virtual disk controller emulation.
 3. **Memory Throughput:** The Virtual Machine maintained higher memory write bandwidth (9,541.97 MiB/s vs. 5,152.43 MiB/s in 1-thread mode), reflecting cgroup memory accounting and slab cache boundaries in containerized memory allocation.
 4. **Network Namespace Overhead:** Docker bridge networking (`docker0` / `veth`) achieved 13.7 Gbps sender throughput with 13 TCP retransmissions, compared to 14.1 Gbps and only 3 retransmissions on VM local loopback, demonstrating the packet traversal cost of virtual ethernet pairs, packet filtering, and NAT bridge translation.
-5. **FastAPI Application Testing Status:** Infrastructure benchmarks (Exercises 1 through 5) are fully completed and empirically validated. Microservice-level HTTP stress testing using FastAPI and `wrk`/`ab` (Exercise 6) is configured, containerized, and scheduled for execution in the subsequent phase.
+5. **FastAPI Microservice Performance:**
+   - **`/health` (c=100, 10,000 reqs):** VM achieved **419.79 req/sec** (238.21 ms latency) vs Docker's **371.07 req/sec** (269.49 ms latency).
+   - **`/compute` (c=10, 1,000 reqs):** VM achieved **12.24 req/sec** vs Docker's **10.76 req/sec**.
+   - **`/memory` (c=10, 1,000 reqs):** VM achieved **16.43 req/sec** vs Docker's **14.40 req/sec**.
+   - Both environments maintained 100% request completion with zero failed requests.
 
 ---
 
@@ -337,6 +342,9 @@ Benchmarking was conducted on standardized Ubuntu 22.04 LTS environments using i
 | **Network Sender Bitrate** | 14.1 Gbits/s | 13.7 Gbits/s | +2.92% | Virtual Machine |
 | **Network Receiver Bitrate** | 14.1 Gbits/s | 10.3 Gbits/s | +36.89% | Virtual Machine |
 | **Network TCP Retransmissions** | 3 packets | 13 packets | +333% | Virtual Machine (Lower Loss) |
+| **FastAPI `/health` Throughput**| 419.79 req/s | 371.07 req/s | +13.13% | Virtual Machine |
+| **FastAPI `/compute` Throughput**| 12.24 req/s | 10.76 req/s | +13.75% | Virtual Machine |
+| **FastAPI `/memory` Throughput** | 16.43 req/s | 14.40 req/s | +14.10% | Virtual Machine |
 
 ---
 
@@ -346,7 +354,7 @@ Benchmarking was conducted on standardized Ubuntu 22.04 LTS environments using i
 
 ![Experiment 2 Overall Dashboard](vm-vs-container-performance/results/figures/overall_performance_dashboard.png)
 
-*Figure 7: Multi-panel comparative evaluation between Virtual Machine and Docker Container across CPU, Memory, Storage, and Network.*
+*Figure 7: 6-panel comprehensive comparative evaluation between Virtual Machine and Docker Container across CPU, Memory, Storage, Network, and FastAPI microservice endpoints.*
 
 ### Subsystem Visualizations
 
@@ -366,6 +374,10 @@ Benchmarking was conducted on standardized Ubuntu 22.04 LTS environments using i
 ![Network Performance](vm-vs-container-performance/results/figures/network_performance.png)
 *Figure 11: TCP Bitrate and packet retransmissions comparison.*
 
+#### 5. FastAPI Microservice Performance (ab)
+![FastAPI Performance](vm-vs-container-performance/results/figures/fastapi_performance.png)
+*Figure 12: Application requests/sec throughput and mean response latency across /health, /compute, and /memory.*
+
 ---
 
 ## Architectural Analysis: Why the Metrics Differ
@@ -376,8 +388,10 @@ In Docker, containers are isolated processes governed by Linux namespaces (`pid`
 ### 2. Random Storage I/O Advantage (Direct VFS)
 Virtual Machines require storage calls to traverse guest filesystem -> virtual SCSI controller emulation -> hypervisor I/O layer -> host storage stack. Containers interact directly with the host Linux Virtual File System (VFS) and storage cache, explaining Docker's **+34.58% higher 4K random read IOPS** (1,767 vs 1,313 IOPS).
 
-### 3. Network Virtual Bridge Overhead
-Docker default bridge networking routes traffic through a virtual ethernet pair (`veth`), passes through the `docker0` Linux bridge, and applies `iptables` NAT packet filtering rules. This extra packet traversal and buffer management accounts for the 13 TCP retransmissions and 10.3 Gbps receiver throughput compared to direct VM loopback (14.1 Gbps with 3 retransmits).
+### 3. Network Virtual Bridge & FastAPI Routing Overhead
+Docker default bridge networking routes traffic through a virtual ethernet pair (`veth`), passes through the `docker0` Linux bridge, and applies `iptables` NAT packet filtering rules. This extra packet traversal and buffer management accounts for:
+- 13 TCP retransmissions vs 3 on VM loopback during raw iperf3 network tests.
+- A consistent ~13–14% latency and throughput difference on FastAPI microservice endpoints under concurrent client requests.
 
 ---
 
@@ -386,11 +400,7 @@ Docker default bridge networking routes traffic through a virtual ethernet pair 
 - [Experiment 2 Dedicated Documentation](vm-vs-container-performance/README.md)
 - [Experiment 2 Formal Lab Report](vm-vs-container-performance/LAB_REPORT.md)
 - [Processed CSV Datasets](vm-vs-container-performance/results/processed/)
-- [Categorized Screenshot Evidence Gallery (25 Images)](vm-vs-container-performance/results/screenshots/)
+- [Categorized Screenshot Evidence Gallery (34 Images)](vm-vs-container-performance/results/screenshots/)
 - [Lab Manual (PDF)](vm-vs-container-performance/docs/Performance_Analysis_VM_vs_Containers_Lab_Manual_Revised.pdf)
-
-> [!IMPORTANT]
-> **FastAPI Application Testing Status:**
-> Infrastructure benchmarks (CPU, memory, storage I/O, network) have been completely executed, analyzed, and visually documented above. Application-level microservice stress testing (Exercise 6: FastAPI with `wrk`/`ab` load generator) has been configured, dockerized, and scripted in the `api/` directory, ready to be executed in the subsequent lab session.
 
 ---

@@ -238,21 +238,23 @@ A 30-second TCP stream was executed between benchmark endpoints:
 
 ### Exercise 6: Microservice / Application Benchmarking (FastAPI)
 
-> [!IMPORTANT]
-> **Laboratory Milestone Status:**
-> - Infrastructure benchmark suites (Exercises 1 through 5: Baseline, CPU, Memory, Disk, Network) have been **fully executed, verified, and documented**.
-> - Application-layer benchmarking (Exercise 6: FastAPI microservice deployment and load testing via `wrk` / `ab`) has been designed, coded, and dockerized within this repository (`api/` and `workloads/`), and is scheduled for execution in the subsequent laboratory session.
+The FastAPI microservice was evaluated across three core application endpoints representing I/O-bound (`/health`), CPU-bound (`/compute`), and memory-bound (`/memory`) workloads using ApacheBench (`ab`):
 
-#### Microservice Architecture Staged for Execution:
-- **Framework:** FastAPI with Uvicorn ASGI server
-- **Endpoints:**
-  - `GET /`: Health check and metadata.
-  - `GET /compute/{iterations}`: Algorithmic CPU-bound workload calculating $\sum_{i=1}^{N} \sqrt{i} \cdot \sin(i)$.
-- **Containerization:** Multistage lightweight Python 3.10 slim container (`api/Dockerfile`).
-- **Load Generation Command:**
-  ```bash
-  wrk -t4 -c100 -d30s http://localhost:8000/compute/100000
-  ```
+| Endpoint Tested | Concurrency / Requests | VM Throughput (req/sec) | Container Throughput (req/sec) | VM Mean Latency (ms) | Container Mean Latency (ms) | VM Median (ms) | Container Median (ms) | VM P95 (ms) | Container P95 (ms) | Failed Requests | Winner |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| **`/health` (I/O Bound)** | c=100 / n=10,000 | **419.79 #/sec** | 371.07 #/sec | **238.21 ms** | 269.49 ms | **230 ms** | 260 ms | **331 ms** | 374 ms | 0 | VM (+13.13%) |
+| **`/compute` (CPU Bound)**| c=10 / n=1,000 | **12.24 #/sec** | 10.76 #/sec | **817.31 ms** | 929.47 ms | **780 ms** | 892 ms | **1,201 ms** | 1,388 ms | 0 | VM (+13.75%) |
+| **`/memory` (Mem Bound)** | c=10 / n=1,000 | **16.43 #/sec** | 14.40 #/sec | **608.50 ms** | 694.62 ms | **535 ms** | 563 ms | **852 ms** | 938 ms | 0 | VM (+14.10%) |
+
+#### Analysis & Inferences:
+1. **Application Throughput Scaling**:
+   - The lightweight `/health` endpoint achieved high concurrency throughput (**419.79 req/s** on VM vs **371.07 req/s** on Container) across 10,000 requests without a single failure (`Failed requests: 0`).
+   - The CPU-intensive `/compute` loop (calculating $\sum_{i=1}^{10^6} i^2$) and memory-intensive `/memory` allocation ($10^6$ elements) saturated worker cores at 10.76–16.43 req/s.
+2. **Container Network & Port Forwarding Overhead**:
+   - The virtual machine maintained a consistent ~13–14% throughput advantage across all endpoints.
+   - In Docker, each inbound HTTP connection to port 8000 undergoes `iptables` NAT translation and traverses the `docker0` Linux bridge and virtual ethernet pair (`veth`). This microsecond-level packet routing adds up over 10,000 concurrent requests.
+3. **Application Reliability**:
+   - Both targets demonstrated 100% request completion with zero dropped connections under heavy concurrency (100 concurrent workers).
 
 ---
 
@@ -264,7 +266,7 @@ All figures below were generated using Matplotlib from the empirical CSV data st
 
 ![Overall Performance Dashboard](results/figures/overall_performance_dashboard.png)
 
-*Figure 1: Comprehensive 4-panel dashboard comparing VM vs Docker Container across CPU Throughput, Memory Bandwidth, Storage Bandwidth, and Network Throughput.*
+*Figure 1: Comprehensive 6-panel dashboard comparing VM vs Docker Container across CPU Throughput, Memory Bandwidth, Storage Bandwidth, Network Throughput, and FastAPI Microservice Performance.*
 
 ---
 
@@ -278,7 +280,15 @@ All figures below were generated using Matplotlib from the empirical CSV data st
 ![Disk I/O Performance](results/figures/disk_io_performance.png)
 <!-- slide -->
 ![Network Performance](results/figures/network_performance.png)
+<!-- slide -->
+![FastAPI Performance](results/figures/fastapi_performance.png)
 ````
+
+1. **CPU Scalability:** [cpu_scalability.png](results/figures/cpu_scalability.png) highlights execution throughput up to 2 cores and latency under thread contention.
+2. **Memory Performance:** [memory_performance.png](results/figures/memory_performance.png) compares memory write throughput and access latency.
+3. **Disk I/O Performance:** [disk_io_performance.png](results/figures/disk_io_performance.png) demonstrates container superiority in random 4K read operations (+34.58% IOPS).
+4. **Network Performance:** [network_performance.png](results/figures/network_performance.png) contrasts raw loopback speed against the Docker bridge overhead and packet retransmissions.
+5. **FastAPI Microservice:** [fastapi_performance.png](results/figures/fastapi_performance.png) compares application-level requests per second and mean response latency across `/health`, `/compute`, and `/memory`.
 
 1. **CPU Scalability:** [cpu_scalability.png](results/figures/cpu_scalability.png) highlights identical execution throughput up to 2 cores and the subsequent latency ramp under thread over-subscription.
 2. **Memory Performance:** [memory_performance.png](results/figures/memory_performance.png) compares memory write throughput and access latency across 1 and 2 threads.
@@ -333,6 +343,15 @@ The repository preserves complete photographic and terminal log evidence for eve
 | **VM Network Loopback** | [23_vm_network_loopback_iperf3.jpeg](results/screenshots/23_vm_network_loopback_iperf3.jpeg) | 14.1 Gbps, 3 retransmits |
 | **Container Network Server** | [24_container_network_iperf3_server.jpeg](results/screenshots/24_container_network_iperf3_server.jpeg) | Container iperf3 server binding |
 | **Container Network Client** | [25_container_network_iperf3_client.jpeg](results/screenshots/25_container_network_iperf3_client.jpeg) | 13.7 Gbps sender, 13 retransmits |
+| **FastAPI Setup & Curl** | [26_fastapi_setup_curl_verification.jpeg](results/screenshots/26_fastapi_setup_curl_verification.jpeg) | ApacheBench setup and curl validation |
+| **Container API Health** | [27_container_fastapi_health_benchmark.jpeg](results/screenshots/27_container_fastapi_health_benchmark.jpeg) | 371.07 req/sec, 269.49 ms avg latency |
+| **Container API Compute R1** | [28_container_fastapi_compute_run1.jpeg](results/screenshots/28_container_fastapi_compute_run1.jpeg) | 10.60 req/sec, 943.33 ms avg latency |
+| **Container API Compute R2** | [29_container_fastapi_compute_run2.jpeg](results/screenshots/29_container_fastapi_compute_run2.jpeg) | 10.76 req/sec, 929.47 ms avg latency |
+| **Container API Memory** | [30_container_fastapi_memory_benchmark.jpeg](results/screenshots/30_container_fastapi_memory_benchmark.jpeg) | 14.40 req/sec, 694.62 ms avg latency |
+| **VM API Compute R1** | [31_vm_fastapi_compute_run1.jpeg](results/screenshots/31_vm_fastapi_compute_run1.jpeg) | 12.01 req/sec, 832.81 ms avg latency |
+| **VM API Compute R2** | [32_vm_fastapi_compute_run2.jpeg](results/screenshots/32_vm_fastapi_compute_run2.jpeg) | 12.24 req/sec, 817.31 ms avg latency |
+| **VM API Memory** | [33_vm_fastapi_memory_benchmark.jpeg](results/screenshots/33_vm_fastapi_memory_benchmark.jpeg) | 16.43 req/sec, 608.50 ms avg latency |
+| **API Raw Results Directory** | [34_api_raw_results_directory_listing.jpeg](results/screenshots/34_api_raw_results_directory_listing.jpeg) | All 6 raw benchmark output text files |
 
 ---
 
