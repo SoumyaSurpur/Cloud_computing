@@ -395,6 +395,19 @@ Docker default bridge networking routes traffic through a virtual ethernet pair 
 
 ---
 
+## Conclusion
+
+This empirical evaluation provides a definitive performance and architectural comparison between Hardware-Level Virtual Machines and OS-Level Containers (Docker) across compute, memory, storage, network, and microservice application tiers:
+
+1. **Compute Equivalence:** Containers match Virtual Machines in raw CPU computational performance ($< 1\%$ difference across 1, 2, 4, and 8 threads) because containerized processes execute natively on the host Linux kernel scheduler without hypervisor trap-and-emulate penalties.
+2. **Storage I/O Advantage in Containers:** Containers achieve **+34.58% higher 4K random read IOPS** (1,767 IOPS vs. 1,313 IOPS) and lower I/O latency (0.56 ms vs. 0.75 ms) due to direct Virtual File System (VFS) passthrough, avoiding guest virtual SCSI controller emulation and disk image format translation.
+3. **Hypervisor Isolation vs. Bridged Routing Trade-Offs:** Virtual Machines provide complete kernel and hardware isolation at the cost of higher memory footprint and startup times. However, direct loopback networking without container bridge NAT (`iptables` / `veth`) yields lower TCP packet retransmissions (3 vs. 13) and ~13–14% higher throughput in high-concurrency microservice request handling (FastAPI: 419.79 req/s vs. 371.07 req/s on `/health`).
+4. **Workload Placement Recommendations:**
+   - **Choose Containers (Docker):** For microservice architectures, horizontally scalable web applications, CI/CD pipelines, and high-density deployments prioritizing fast spin-up times, minimal resource overhead, and maximum random I/O throughput.
+   - **Choose Virtual Machines:** For multi-tenant hosting, untrusted code execution, legacy or multi-OS environments (e.g., running Windows/BSD alongside Linux), and workloads requiring strict hardware-level security boundaries and dedicated kernel tuning.
+
+---
+
 ## Experiment 2 Evidence & Resources
 
 - [Experiment 2 Dedicated Documentation](vm-vs-container-performance/README.md)
@@ -404,3 +417,5 @@ Docker default bridge networking routes traffic through a virtual ethernet pair 
 - [Lab Manual (PDF)](vm-vs-container-performance/docs/Performance_Analysis_VM_vs_Containers_Lab_Manual_Revised.pdf)
 
 ---
+
+*Experiment 2 documented and maintained by **Soumya Surpur** (USN: `01FE24BCI121`, Roll No: `245`) for Cloud Computing Laboratory.*
