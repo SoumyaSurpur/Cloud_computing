@@ -1,30 +1,9 @@
 # Cloud Computing Laboratory
 
-[![Student](https://img.shields.io/badge/Author-Soumya%20Surpur-blue.svg)](#)
-[![USN](https://img.shields.io/badge/USN-01FE24BCI121-green.svg)](#)
-[![Roll No](https://img.shields.io/badge/Roll%20No-245-orange.svg)](#)
-[![Course](https://img.shields.io/badge/Course-Cloud%20Computing%20Laboratory-indigo.svg)](#)
+![Course](https://img.shields.io/badge/Course-Cloud%20Computing-blue)
 ![Hypervisors](https://img.shields.io/badge/Hypervisors-Proxmox%20VE%20%7C%20VMware%20Workstation-orange)
-![Benchmark](https://img.shields.io/badge/Benchmark-Sysbench%20%7C%20FIO%20%7C%20iperf3-brightgreen)
+![Benchmark](https://img.shields.io/badge/Benchmark-Sysbench%20CPU%2020k%20Primes-brightgreen)
 ![Status](https://img.shields.io/badge/Status-Completed-brightgreen)
-
-Welcome to the **Cloud Computing Laboratory** repository maintained by **Soumya Surpur** (USN: `01FE24BCI121`, Roll No: `245`). This repository serves as a centralized academic and practical portfolio documenting cloud computing experiments, system virtualization benchmarks, container orchestration workflows, and distributed infrastructure evaluations.
-
----
-
-## Laboratory Experiment Index
-
-This repository is structured modularly to host all hands-on cloud computing laboratory experiments across the semester:
-
-| Exp No. | Experiment Title | Core Technologies / Hypervisors | Documentation Link | Status |
-| :---: | :--- | :--- | :--- | :---: |
-| **01** | **Performance Analysis of Type-1 and Type-2 Hypervisors** | Proxmox VE (KVM), VMware Workstation, Sysbench | [Experiment 1 Details](#experiment-1-performance-analysis-of-type-1-and-type-2-hypervisors) \| [Exp 1 Lab Report](LAB_REPORT.md) \| [Type 1 PDF](type1.pdf) \| [Type 2 PDF](type2.pdf) | `Completed` |
-| **02** | **Performance Analysis of Virtual Machines and Containers (Docker)** | Ubuntu 22.04 LTS, Docker CE, Sysbench, FIO, iperf3, FastAPI | [Experiment 2 Details](vm-vs-container-performance/README.md) \| [Exp 2 Lab Report](vm-vs-container-performance/LAB_REPORT.md) \| [Exp 2 Manual](vm-vs-container-performance/docs/Performance_Analysis_VM_vs_Containers_Lab_Manual_Revised.pdf) | `Completed (Benchmarked)` |
-| **03** | Container Orchestration & Scaling | Kubernetes (K3s / Minikube), Pods, Ingress | *Coming Soon* | `Planned` |
-| **04** | Cloud Storage & Object Storage Benchmarking | MinIO / AWS S3, Ceph, FIO Benchmark | *Coming Soon* | `Planned` |
-| **05** | Infrastructure as Code (IaC) & Cloud Provisioning | Terraform, OpenStack / AWS EC2 | *Coming Soon* | `Planned` |
-
----
 
 # Experiment 1: Performance Analysis of Type-1 and Type-2 Hypervisors
 
@@ -281,49 +260,29 @@ python scripts/generate_plots.py
 ```text
 Cloud_Computing/
 │
-├── README.md                                  # Central Laboratory Portfolio & Experiments Overview
-├── LAB_REPORT.md                              # Formal Academic Laboratory Report (Experiment 1)
-├── Lab-Manual-Hypervisor-Performance-Analysis.pdf # Complete Hypervisor Performance Analysis Lab Manual
-├── type1.pdf                                  # Experiment 1 Type-1 Proxmox VE Report PDF (Soumya)
-├── type2.pdf                                  # Experiment 1 Type-2 VMware Workstation Report PDF (Soumya)
+├── README.md                                  # Central Laboratory Documentation & Experiment 1 Overview
+├── LAB_REPORT.md                              # Formal Academic Laboratory Report Submission
+├── Lab-Manual-Hypervisor-Performance-Analysis... # Complete Hypervisor Performance Analysis Lab Manual
+├── type1.pdf                                  # Type-1 Hypervisor – Proxmox VE Documentation
+├── type2.pdf                                  # Type-2 Hypervisor – VMware Workstation Documentation
 │
-├── images/                                    # Experiment 1 Evidence & Generated Visualizations
-│   ├── 1.png                                  # Proxmox VE (Type-1) Benchmark Screenshot
-│   ├── 2.png                                  # VMware Workstation (Type-2) Soumya Benchmark Screenshot
+├── images/                                    # Experimental Evidence & Generated Visualizations
+│   ├── 1.png                                  # Proxmox VE (Type-1) Benchmark Terminal Screenshot
+│   ├── 2.png                                  # VMware Workstation (Type-2) Benchmark Screenshot
 │   ├── events_per_second_comparison.png       # CPU Throughput Comparison Bar Chart
-│   ├── latency_comparison.png                 # Latency Breakdown Bar Chart
-│   ├── total_events_comparison.png            # Total Events Completed in 10s Chart
-│   └── overall_performance_dashboard.png      # Multi-panel Analytical Evaluation Dashboard
+│   ├── latency_comparison.png                 # Latency Breakdown Bar Chart (Min, Avg, P95, Max)
+│   ├── overall_performance_dashboard.png      # Multi-panel Analytical Evaluation Dashboard
+│   └── total_events_comparison.png            # Total Events Completed in 10s Chart
 │
-├── scripts/                                   # Experiment 1 Automation & Analytical Scripts
-│   ├── benchmark.sh                           # Sysbench VM Execution Script
-│   ├── generate_plots.py                      # Matplotlib Visualization Generator
-│   └── parse_sysbench.py                      # Quantitative Delta & Speedup Calculator
-│
-└── vm-vs-container-performance/               # Experiment 2: VM vs Docker Performance Evaluation
-    ├── README.md                              # Complete Experiment 2 Documentation & Analysis
-    ├── LAB_REPORT.md                          # Formal Academic Laboratory Report (Experiment 2)
-    ├── docs/                                  # Revised Experiment 2 Lab Manual PDF
-    ├── docker/                                # Benchmark Environment Dockerfile
-    ├── api/                                   # FastAPI Microservice & Container Dockerfile
-    ├── workloads/                             # Algorithmic Compute Workloads (Fibonacci)
-    ├── scripts/                               # Benchmark Automation & Plotting Scripts
-    │   ├── run_cpu.sh                         # Automated CPU Benchmark Script
-    │   ├── run_memory.sh                      # Automated Memory Benchmark Script
-    │   ├── run_disk.sh                        # Automated FIO Storage Benchmark Script
-    │   ├── run_network.sh                     # Automated iperf3 Network Benchmark Script
-    │   ├── analyze_results.py                 # Results Comparison & Speedup Matrix
-    │   └── generate_plots.py                  # Matplotlib Figure Generator
-    └── results/                               # Benchmark Artifacts & Empirical Outputs
-        ├── raw/                               # Raw Sysbench, FIO, and iperf3 output logs
-        ├── screenshots/                       # 25 Categorized Execution Screenshot Evidence Files
-        ├── processed/                         # Processed Subsystem CSV Datasets
-        └── figures/                           # High-Resolution Publication-Quality Plots
-```
+└── scripts/                                   # Automation & Analytical Scripts
+    ├── benchmark.sh                           # Sysbench VM Execution & Hardware Logging Script
+    ├── generate_plots.py                      # Matplotlib Visualization Generator
+    └── parse_sysbench.py                      # Quantitative Delta & Speedup Calculator
 
+```
 ---
 
-## 11. Conclusion & Key Inferences (Experiment 1)
+## 11. Conclusion & Key Inferences
 
 1. **Definitive Performance Superiority**: Proxmox VE (Type-1 Bare-Metal) demonstrated a **2.49x throughput advantage (+149.29%)** over VMware Workstation (Type-2) under an identical CPU computational load.
 2. **Latency Consistency**: Proxmox VE exhibited **59.87% lower average latency** and eliminated severe tail latency spikes, making it the appropriate choice for latency-sensitive applications (databases, financial trading, real-time microservices).
@@ -333,40 +292,105 @@ Cloud_Computing/
 
 ---
 
+---
+
 # Experiment 2: Performance Analysis of Virtual Machines and Containers (Docker)
 
-> [!NOTE]
-> Complete technical documentation, full empirical datasets, 25 screenshot proofs, and publication figures for Experiment 2 are housed in [`vm-vs-container-performance/`](vm-vs-container-performance/).
+[![Environment](https://img.shields.io/badge/OS-Ubuntu%2022.04%20LTS-purple.svg)](#)
+[![Docker](https://img.shields.io/badge/Container%20Engine-Docker%20CE-blue.svg)](#)
+[![Status](https://img.shields.io/badge/Benchmark-Infrastructure%20Complete-brightgreen.svg)](#)
 
-## Overview & Key Empirical Highlights
+## Executive Summary
 
-Experiment 2 evaluates the architectural and performance characteristics of **Hardware-Level Virtual Machines** versus **OS-Level Containers (Docker)** across four computing tiers:
+Experiment 2 evaluates the architectural and performance characteristics of **Hardware-Level Virtual Machines (VMware / KVM)** versus **OS-Level Containers (Docker)** across compute, memory, storage I/O, and networking subsystems.
 
-| Subsystem | Metric | Virtual Machine | Docker Container | Empirical Finding |
-| :--- | :--- | :---: | :---: | :--- |
-| **CPU (1-Thread)** | Events / sec | 515.84 EPS | 517.19 EPS | Near-identical performance (~0.26% delta) |
-| **CPU (2-Thread)** | Events / sec | 883.55 EPS | 894.38 EPS | Linear scaling on dual-core allocation |
-| **Memory (2-Thread)** | Bandwidth (MiB/s) | 9,880.38 MiB/s | 6,970.16 MiB/s | VM memory write advantage |
-| **Storage (Seq Read)** | Bandwidth (MiB/s) | 461 MiB/s | 500 MiB/s | Container +8.46% faster sequential read |
-| **Storage (Rand Read 4K)**| IOPS (Ops/sec) | 1,313 IOPS | 1,767 IOPS | **Container +34.58% higher IOPS** (Direct VFS) |
-| **Network (Sender)** | Bitrate (Gbits/s) | 14.1 Gbps | 13.7 Gbps | VM loopback vs Docker bridge |
-| **Network (Retransmits)**| Packet drops | 3 retransmits | 13 retransmits | Virtual bridge / NAT packet traversal |
+Benchmarking was conducted on standardized Ubuntu 22.04 LTS environments using industry-standard profiling suites:
+- **CPU Computation:** `sysbench cpu` across 1, 2, 4, and 8 thread scales.
+- **Memory Subsystem:** `sysbench memory` sequential write bandwidth and latency (512 MB working set, 1 MB block size).
+- **Storage Subsystem:** Flexible I/O Tester (`fio`) measuring sequential and 4K random read/write throughput and IOPS.
+- **Network Subsystem:** `iperf3` measuring TCP throughput, transfer volumes, and socket retransmissions over loopback and virtual bridge (`docker0`) interfaces.
 
-### Experiment 2 Performance Dashboard
+### Key Empirical Findings
 
-![Experiment 2 Dashboard](vm-vs-container-performance/results/figures/overall_performance_dashboard.png)
+1. **CPU Execution Parity:** Docker containers delivered near-identical CPU computational performance to the virtual machine (within ~0.26% to 1.23%), confirming that container processes execute bare-metal instructions directly on host processor cores without hypervisor instruction translation penalties.
+2. **Storage I/O Advantage:** Docker achieved a **+34.58% higher 4K Random Read IOPS** (1,767 IOPS vs. 1,313 IOPS) and lower I/O latency (0.56 ms vs. 0.75 ms) due to direct Virtual File System (VFS) passthrough compared to hypervisor virtual disk controller emulation.
+3. **Memory Throughput:** The Virtual Machine maintained higher memory write bandwidth (9,541.97 MiB/s vs. 5,152.43 MiB/s in 1-thread mode), reflecting cgroup memory accounting and slab cache boundaries in containerized memory allocation.
+4. **Network Namespace Overhead:** Docker bridge networking (`docker0` / `veth`) achieved 13.7 Gbps sender throughput with 13 TCP retransmissions, compared to 14.1 Gbps and only 3 retransmissions on VM local loopback, demonstrating the packet traversal cost of virtual ethernet pairs, packet filtering, and NAT bridge translation.
+5. **FastAPI Application Testing Status:** Infrastructure benchmarks (Exercises 1 through 5) are fully completed and empirically validated. Microservice-level HTTP stress testing using FastAPI and `wrk`/`ab` (Exercise 6) is configured, containerized, and scheduled for execution in the subsequent phase.
 
-### Experiment 2 Quick Links
-- 📘 [Full Experiment 2 Documentation & Analysis](vm-vs-container-performance/README.md)
-- 📝 [Formal Academic Lab Report (Exp 2)](vm-vs-container-performance/LAB_REPORT.md)
-- 📊 [Processed Datasets (CSV)](vm-vs-container-performance/results/processed/)
-- 📷 [Categorized Screenshot Evidence Gallery (25 Images)](vm-vs-container-performance/results/screenshots/)
-- 📄 [Revised Lab Manual (PDF)](vm-vs-container-performance/docs/Performance_Analysis_VM_vs_Containers_Lab_Manual_Revised.pdf)
+---
+
+## Performance Comparison Matrix (VM vs Container)
+
+| Subsystem / Metric | Virtual Machine (VM) | Docker Container | Empirical Delta | Performance Winner |
+| :--- | :---: | :---: | :---: | :--- |
+| **CPU 1-Thread Throughput** | 515.84 EPS | 517.19 EPS | +0.26% | Container (Parity) |
+| **CPU 2-Thread Throughput** | 883.55 EPS | 894.38 EPS | +1.23% | Container (Parity) |
+| **CPU 4-Thread Throughput** | 928.17 EPS | 900.45 EPS | +3.08% | Virtual Machine |
+| **CPU 8-Thread Throughput** | 905.17 EPS | 914.42 EPS | +1.02% | Container (Parity) |
+| **Memory Bandwidth (1-Thread)** | 9,541.97 MiB/s | 5,152.43 MiB/s | +85.19% | Virtual Machine |
+| **Memory Bandwidth (2-Thread)** | 9,880.38 MiB/s | 6,970.16 MiB/s | +41.75% | Virtual Machine |
+| **Storage Seq Read (1M)** | 461 MiB/s | 500 MiB/s | +8.46% | **Docker Container** |
+| **Storage Seq Write (1M)** | 358 MiB/s | 291 MiB/s | +23.02% | Virtual Machine |
+| **Storage Rand Read (4K IOPS)** | 1,313 IOPS | 1,767 IOPS | **+34.58%** | **Docker Container (Direct VFS)** |
+| **Storage Rand Write (4K IOPS)**| 1,331 IOPS | 1,346 IOPS | +1.13% | Docker Container |
+| **Network Sender Bitrate** | 14.1 Gbits/s | 13.7 Gbits/s | +2.92% | Virtual Machine |
+| **Network Receiver Bitrate** | 14.1 Gbits/s | 10.3 Gbits/s | +36.89% | Virtual Machine |
+| **Network TCP Retransmissions** | 3 packets | 13 packets | +333% | Virtual Machine (Lower Loss) |
+
+---
+
+## Analytical Visualizations & Charts (Experiment 2)
+
+### Multi-Panel Overall Performance Dashboard
+
+![Experiment 2 Overall Dashboard](vm-vs-container-performance/results/figures/overall_performance_dashboard.png)
+
+*Figure 7: Multi-panel comparative evaluation between Virtual Machine and Docker Container across CPU, Memory, Storage, and Network.*
+
+### Subsystem Visualizations
+
+#### 1. CPU Scalability (Throughput & Latency)
+![CPU Scalability](vm-vs-container-performance/results/figures/cpu_scalability.png)
+*Figure 8: CPU Throughput and latency scalability across 1, 2, 4, and 8 worker threads.*
+
+#### 2. Memory Performance (Write Bandwidth & Latency)
+![Memory Performance](vm-vs-container-performance/results/figures/memory_performance.png)
+*Figure 9: Sequential memory write bandwidth (MiB/s) and access latency comparison.*
+
+#### 3. Storage I/O Performance (fio)
+![Disk I/O Performance](vm-vs-container-performance/results/figures/disk_io_performance.png)
+*Figure 10: Storage sequential transfer rates and 4K random read/write IOPS.*
+
+#### 4. Network Performance (iperf3)
+![Network Performance](vm-vs-container-performance/results/figures/network_performance.png)
+*Figure 11: TCP Bitrate and packet retransmissions comparison.*
+
+---
+
+## Architectural Analysis: Why the Metrics Differ
+
+### 1. CPU Parity (Bare-Metal Instruction Execution)
+In Docker, containers are isolated processes governed by Linux namespaces (`pid`, `net`, `mnt`, `ipc`, `uts`, `user`) and control groups (`cgroups`). Because CPU instructions do not require hypervisor trap-and-emulate cycles or binary translation, containerized compute threads execute at the exact same hardware clock frequency as native/host processes.
+
+### 2. Random Storage I/O Advantage (Direct VFS)
+Virtual Machines require storage calls to traverse guest filesystem -> virtual SCSI controller emulation -> hypervisor I/O layer -> host storage stack. Containers interact directly with the host Linux Virtual File System (VFS) and storage cache, explaining Docker's **+34.58% higher 4K random read IOPS** (1,767 vs 1,313 IOPS).
+
+### 3. Network Virtual Bridge Overhead
+Docker default bridge networking routes traffic through a virtual ethernet pair (`veth`), passes through the `docker0` Linux bridge, and applies `iptables` NAT packet filtering rules. This extra packet traversal and buffer management accounts for the 13 TCP retransmissions and 10.3 Gbps receiver throughput compared to direct VM loopback (14.1 Gbps with 3 retransmits).
+
+---
+
+## Experiment 2 Evidence & Resources
+
+- [Experiment 2 Dedicated Documentation](vm-vs-container-performance/README.md)
+- [Experiment 2 Formal Lab Report](vm-vs-container-performance/LAB_REPORT.md)
+- [Processed CSV Datasets](vm-vs-container-performance/results/processed/)
+- [Categorized Screenshot Evidence Gallery (25 Images)](vm-vs-container-performance/results/screenshots/)
+- [Lab Manual (PDF)](vm-vs-container-performance/docs/Performance_Analysis_VM_vs_Containers_Lab_Manual_Revised.pdf)
 
 > [!IMPORTANT]
 > **FastAPI Application Testing Status:**
 > Infrastructure benchmarks (CPU, memory, storage I/O, network) have been completely executed, analyzed, and visually documented above. Application-level microservice stress testing (Exercise 6: FastAPI with `wrk`/`ab` load generator) has been configured, dockerized, and scripted in the `api/` directory, ready to be executed in the subsequent lab session.
 
 ---
-
-*Academic Portfolio maintained by **Soumya Surpur** (USN: `01FE24BCI121`, Roll No: `245`) for Cloud Computing Laboratory Coursework.*
