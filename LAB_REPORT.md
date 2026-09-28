@@ -7,6 +7,7 @@
 ### Student & Course Metadata
 - **Course Name:** Cloud Computing Laboratory
 - **Experiment No:** 01
+- **USN:** 01FE24BCI121
 - **Student Name:** Soumya
 - **Environment:** Ubuntu Linux 22.04 LTS on Proxmox VE & VMware Workstation Pro
 - **Date of Experiment:** September 2026
@@ -223,7 +224,6 @@ Proxmox VE delegates CPU instruction execution directly to hardware via Intel VT
 ---
 
 ---
----
 
 # LABORATORY REPORT - EXPERIMENT 02
 
@@ -239,7 +239,6 @@ Proxmox VE delegates CPU instruction execution directly to hardware via Intel VT
 - **Roll No:** 245
 - **Environment:** Ubuntu Linux 22.04 LTS (x86_64), Docker Community Edition (CE)
 - **Date of Experiment:** September 2026
-- **Evaluation Status:** Evaluated and Documented
 
 ---
 
@@ -415,5 +414,4 @@ This experiment successfully established an empirical performance baseline compa
 - The infrastructure evaluation is complete across CPU, Memory, Disk, and Network tiers, providing the foundation for microservice load testing in subsequent laboratory exercises.
 
 ---
-
-*Report prepared and submitted by **Soumya** (USN: `01FE24BCI121`, Roll No: `245`) for Cloud Computing Laboratory.*
+*Report prepared and submitted by **Soumya Surpur** (USN: `01FE24BCI121`, Roll No: `245`) for Cloud Computing Laboratory.*
